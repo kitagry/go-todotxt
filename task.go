@@ -47,6 +47,11 @@ func (t *Task) SetPriority(p byte) error {
 	return nil
 }
 
+// Priority returns task's priority.
+func (t *Task) Priority() byte {
+	return t.priority
+}
+
 // SetDescription set description, and parse descrition, then
 // searches and sets projects, contexts and tags.
 func (t *Task) SetDescription(d string) {
