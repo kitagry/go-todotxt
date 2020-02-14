@@ -38,7 +38,10 @@ func (r *Reader) parseTask(line string) (*Task, error) {
 
 	// check priority
 	if priorityRegex.MatchString(line) {
-		task.Priority = line[1]
+		err := task.SetPriority(line[1])
+		if err != nil {
+			return nil, xerrors.Errorf("SetPriority failed: %w", err)
+		}
 		line = strings.Trim(string(line[3:]), " ")
 	}
 
@@ -62,36 +65,7 @@ func (r *Reader) parseTask(line string) (*Task, error) {
 		line = strings.Trim(string(line[10:]), " ")
 	}
 
-	task.Description = line
-
-	// check projects, contexts and tags
-	ds := strings.Split(task.Description, " ")
-	for _, d := range ds {
-		if len(d) == 1 {
-			continue
-		}
-
-		if strings.HasPrefix(d, "+") {
-			task.Projects = append(task.Projects, string(d[1:]))
-		}
-
-		if strings.HasPrefix(d, "@") {
-			task.Contexts = append(task.Contexts, string(d[1:]))
-		}
-
-		if strings.Contains(d, ":") {
-			i := strings.Index(d, ":")
-			if i == 0 || i == len(d)-1 {
-				continue
-			}
-			key := d[:i]
-			value := d[i+1:]
-			if task.Tags == nil {
-				task.Tags = make(map[string]string)
-			}
-			task.Tags[key] = value
-		}
-	}
+	task.SetDescription(line)
 
 	return task, nil
 }

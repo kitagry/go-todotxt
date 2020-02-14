@@ -1,32 +1,30 @@
-package todotxt_test
+package todotxt
 
 import (
 	"bytes"
 	"testing"
 	"time"
-
-	"github.com/kitagry/go-todotxt"
 )
 
 func TestWriter_Write(t *testing.T) {
 	tests := []struct {
-		Input  *todotxt.Task
+		Input  *Task
 		Output string
 	}{
 		{
-			Input:  &todotxt.Task{},
+			Input:  &Task{},
 			Output: "\n",
 		},
 		{
-			Input: &todotxt.Task{
-				Priority:  'A',
+			Input: &Task{
+				priority:  'A',
 				Completed: true,
 			},
 			Output: "x (A)\n",
 		},
 		{
-			Input: &todotxt.Task{
-				Priority:       'A',
+			Input: &Task{
+				priority:       'A',
 				Completed:      true,
 				CompletionDate: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
 				CreationDate:   time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
@@ -34,8 +32,8 @@ func TestWriter_Write(t *testing.T) {
 			Output: "x (A) 2020-01-01 2020-01-01\n",
 		},
 		{
-			Input: &todotxt.Task{
-				Priority:       'A',
+			Input: &Task{
+				priority:       'A',
 				Completed:      false,
 				CompletionDate: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
 				CreationDate:   time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
@@ -43,22 +41,22 @@ func TestWriter_Write(t *testing.T) {
 			Output: "(A) 2020-01-01\n",
 		},
 		{
-			Input: &todotxt.Task{
-				Priority:       'A',
+			Input: &Task{
+				priority:       'A',
 				Completed:      true,
 				CompletionDate: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
 				CreationDate:   time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
-				Description:    "Hello World",
+				description:    "Hello World",
 			},
 			Output: "x (A) 2020-01-01 2020-01-01 Hello World\n",
 		},
 		{
-			Input: &todotxt.Task{
-				Priority:       'A',
+			Input: &Task{
+				priority:       'A',
 				Completed:      true,
 				CompletionDate: time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
 				CreationDate:   time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC),
-				Description:    "Hello World +Project @context key:value",
+				description:    "Hello World +Project @context key:value",
 			},
 			Output: "x (A) 2020-01-01 2020-01-01 Hello World +Project @context key:value\n",
 		},
@@ -66,7 +64,7 @@ func TestWriter_Write(t *testing.T) {
 
 	for _, test := range tests {
 		buf := &bytes.Buffer{}
-		w := todotxt.NewWriter(buf)
+		w := NewWriter(buf)
 		err := w.Write(test.Input)
 		if err != nil {
 			t.Errorf("Writer Write should success: %v", err)
@@ -87,25 +85,25 @@ func TestWriter_Write(t *testing.T) {
 }
 
 func TestWriter_WriteAll(t *testing.T) {
-	input := []*todotxt.Task{
+	input := []*Task{
 		{
-			Priority:    'A',
-			Description: "Thank Mom for the meatballs @phone",
-			Contexts:    []string{"phone"},
+			priority:    'A',
+			description: "Thank Mom for the meatballs @phone",
+			contexts:    []string{"phone"},
 		},
 		{
-			Priority:    'B',
-			Description: "Schedule Goodwill pickup +GarageSale @phone",
-			Projects:    []string{"GarageSale"},
-			Contexts:    []string{"phone"},
+			priority:    'B',
+			description: "Schedule Goodwill pickup +GarageSale @phone",
+			projects:    []string{"GarageSale"},
+			contexts:    []string{"phone"},
 		},
 		{
-			Description: "Post signs around the neighborhood +GarageSale",
-			Projects:    []string{"GarageSale"},
+			description: "Post signs around the neighborhood +GarageSale",
+			projects:    []string{"GarageSale"},
 		},
 		{
-			Description: "@GroceryStore Eskimo pies",
-			Contexts:    []string{"GroceryStore"},
+			description: "@GroceryStore Eskimo pies",
+			contexts:    []string{"GroceryStore"},
 		},
 	}
 
@@ -115,7 +113,7 @@ Post signs around the neighborhood +GarageSale
 @GroceryStore Eskimo pies
 `
 	buf := &bytes.Buffer{}
-	w := todotxt.NewWriter(buf)
+	w := NewWriter(buf)
 
 	err := w.WriteAll(input)
 	if err != nil {

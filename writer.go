@@ -29,8 +29,8 @@ func (w *Writer) Write(t *Task) error {
 		line = append(line, "x")
 	}
 
-	if t.Priority != 0 {
-		line = append(line, fmt.Sprintf("(%s)", string(t.Priority)))
+	if t.priority != 0 {
+		line = append(line, fmt.Sprintf("(%s)", string(t.priority)))
 	}
 
 	if t.Completed && !reflect.DeepEqual(t.CompletionDate, time.Time{}) {
@@ -41,8 +41,8 @@ func (w *Writer) Write(t *Task) error {
 		line = append(line, t.CreationDate.Format("2006-01-02"))
 	}
 
-	if t.Description != "" {
-		line = append(line, t.Description)
+	if t.Description() != "" {
+		line = append(line, t.Description())
 	}
 
 	_, err := w.w.WriteString(strings.Join(line, " ") + "\n")
