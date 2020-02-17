@@ -106,3 +106,13 @@ func (t *Task) Contexts() []string {
 func (t *Task) Tags() map[string]string {
 	return t.tags
 }
+
+// HasCreationDate returns bool whether task has CreationDate
+func (t *Task) HasCreationDate() bool {
+	return !t.CreationDate.IsZero()
+}
+
+// HasCompletionDate returns bool whether task has CompletionDate
+func (t *Task) HasCompletionDate() bool {
+	return !t.CompletionDate.IsZero()
+}

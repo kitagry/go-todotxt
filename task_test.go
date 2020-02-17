@@ -3,6 +3,7 @@ package todotxt
 import (
 	"reflect"
 	"testing"
+	"time"
 )
 
 func TestTask_SetPriority(t *testing.T) {
@@ -95,6 +96,54 @@ func TestTask_SetDescription(t *testing.T) {
 
 		if !reflect.DeepEqual(test.Tags, task.Tags()) {
 			t.Errorf("Tags\ngot  %s\nwant %s", task.Tags(), test.Tags)
+		}
+	}
+}
+
+func TestTask_HasCreationDate(t *testing.T) {
+	tests := []struct {
+		Input  *Task
+		Output bool
+	}{
+		{
+			Input:  &Task{},
+			Output: false,
+		},
+		{
+			Input: &Task{
+				CreationDate: time.Date(1, 0, 0, 0, 0, 0, 0, time.UTC),
+			},
+			Output: true,
+		},
+	}
+
+	for _, test := range tests {
+		if test.Input.HasCreationDate() != test.Output {
+			t.Errorf("task(%v).HasCreationDate got %v, want %v", test.Input, test.Input.HasCompletionDate(), test.Output)
+		}
+	}
+}
+
+func TestTask_HasCompletionDate(t *testing.T) {
+	tests := []struct {
+		Input  *Task
+		Output bool
+	}{
+		{
+			Input:  &Task{},
+			Output: false,
+		},
+		{
+			Input: &Task{
+				CompletionDate: time.Date(1, 0, 0, 0, 0, 0, 0, time.UTC),
+			},
+			Output: true,
+		},
+	}
+
+	for _, test := range tests {
+		if test.Input.HasCompletionDate() != test.Output {
+			t.Errorf("task(%v).HasCompletionDate got %v, want %v", test.Input, test.Input.HasCompletionDate(), test.Output)
 		}
 	}
 }
