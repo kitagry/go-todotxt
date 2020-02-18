@@ -6,6 +6,7 @@ var commands = []*cli.Command{
 	commandAdd,
 	commandRemove,
 	commandList,
+	commandPriority,
 }
 
 var commandAdd = &cli.Command{
@@ -27,4 +28,11 @@ var commandList = &cli.Command{
 	Usage:  "List todo.txt",
 	Action: todotxtList,
 	Flags:  listFlags,
+}
+
+var commandPriority = &cli.Command{
+	Name:   "pri",
+	Usage:  "Change priority",
+	Action: todotxtPriority,
+	Flags:  priorityFlags,
 }
