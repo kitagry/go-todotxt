@@ -2,6 +2,7 @@ package todotxt
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 )
@@ -35,6 +36,61 @@ type Task struct {
 	// tags is task's tags.
 	// If you want to set tags, you can add tags to description, then use SetDescription.
 	tags map[string]string
+}
+
+// NewTask returns new Task.
+// this task's creationDate is time.Now().
+func NewTask() *Task {
+	return &Task{
+		Completed:    false,
+		CreationDate: time.Now(),
+	}
+}
+
+func (t *Task) String() string {
+	return t.Format()
+}
+
+// Format returns todo.txt formatted string
+func (t *Task) Format() string {
+	line := []string{}
+	if t.Completed {
+		line = append(line, "x")
+	}
+
+	if t.priority != 0 {
+		line = append(line, fmt.Sprintf("(%s)", string(t.priority)))
+	}
+
+	if t.Completed && t.HasCompletionDate() {
+		line = append(line, t.CompletionDate.Format("2006-01-02"))
+	}
+
+	if t.HasCreationDate() {
+		line = append(line, t.CreationDate.Format("2006-01-02"))
+	}
+
+	if t.Description() != "" {
+		line = append(line, t.Description())
+	}
+
+	return strings.Join(line, " ")
+}
+
+// Complete sets Completed true, and set CompletionDate time.Now.
+func (t *Task) Complete() {
+	if !t.Completed {
+		t.Completed = true
+		t.CompletionDate = time.Now()
+	}
+}
+
+// Reopen sets Completed false, and set CompletionDate time.Time{}
+func (t *Task) Reopen() {
+	if t.Completed {
+		t.Completed = false
+		t.CompletionDate = time.Time{}
+	}
 }
 
 // SetPriority sets priority to task.
