@@ -1,31 +1,18 @@
 package main
 
 import (
-	"errors"
 	"os"
 	"strconv"
 
-	"github.com/kitagry/go-todotxt"
 	"github.com/olekukonko/tablewriter"
 	"github.com/urfave/cli/v2"
 	"golang.org/x/xerrors"
 )
 
-var listFlags = []cli.Flag{
-	&cli.StringFlag{Name: "file", Value: "todo.txt", Aliases: []string{"f"}, Usage: "Path to todo.txt file"},
-}
-
 func todotxtList(c *cli.Context) error {
-	f, err := os.Open(c.String("file"))
+	tasks, err := getTasks(c.String("file"))
 	if err != nil {
-		return errors.New("todo.txt is not found")
-	}
-	defer f.Close()
-
-	r := todotxt.NewReader(f)
-	tasks, err := r.ReadAll()
-	if err != nil {
-		return xerrors.Errorf("todo.txt Read error: %w", err)
+		return xerrors.Errorf("Failed to getTasks: %w", err)
 	}
 
 	table := tablewriter.NewWriter(os.Stdout)

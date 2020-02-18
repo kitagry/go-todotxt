@@ -1,9 +1,7 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-	"os"
 	"strconv"
 
 	"github.com/kitagry/go-todotxt"
@@ -11,22 +9,11 @@ import (
 	"golang.org/x/xerrors"
 )
 
-var removeFlags = []cli.Flag{
-	&cli.StringFlag{Name: "file", Value: "todo.txt", Aliases: []string{"f"}, Usage: "Path to todo.txt file"},
-}
-
 func todotxtRemove(c *cli.Context) error {
 	todotxtFile := c.String("file")
-	f, err := os.Open(todotxtFile)
+	tasks, err := getTasks(todotxtFile)
 	if err != nil {
-		return errors.New("todo.txt is not found")
-	}
-	defer f.Close()
-
-	r := todotxt.NewReader(f)
-	tasks, err := r.ReadAll()
-	if err != nil {
-		return xerrors.Errorf("Read todo error: %w", err)
+		return xerrors.Errorf("Failed to getTasks: %w", err)
 	}
 
 	index, err := strconv.Atoi(c.Args().First())
@@ -35,14 +22,7 @@ func todotxtRemove(c *cli.Context) error {
 	}
 	tasks = removeTask(tasks, index-1)
 
-	f, err = os.Create(todotxtFile)
-	if err != nil {
-		return errors.New("todo.txt is not found")
-	}
-	defer f.Close()
-
-	w := todotxt.NewWriter(f)
-	err = w.WriteAll(tasks)
+	err = overWrite(todotxtFile, tasks)
 	if err != nil {
 		return xerrors.Errorf("Failed to write tasks: %w", err)
 	}

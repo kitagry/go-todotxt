@@ -11,6 +11,10 @@ var commands = []*cli.Command{
 	commandUndo,
 }
 
+var defaultFlags = []cli.Flag{
+	&cli.StringFlag{Name: "file", Value: "todo.txt", Aliases: []string{"f"}, Usage: "Path to todo.txt file"},
+}
+
 var commandAdd = &cli.Command{
 	Name:   "add",
 	Usage:  "Add task to todo.txt",
@@ -22,33 +26,33 @@ var commandRemove = &cli.Command{
 	Name:   "rm",
 	Usage:  "Remove task from todo.txt",
 	Action: todotxtRemove,
-	Flags:  removeFlags,
+	Flags:  defaultFlags,
 }
 
 var commandList = &cli.Command{
 	Name:   "ls",
 	Usage:  "List todo.txt",
 	Action: todotxtList,
-	Flags:  listFlags,
+	Flags:  defaultFlags,
 }
 
 var commandPriority = &cli.Command{
 	Name:   "pri",
 	Usage:  "Change priority",
 	Action: todotxtPriority,
-	Flags:  priorityFlags,
+	Flags:  defaultFlags,
 }
 
 var commandDo = &cli.Command{
 	Name:   "do",
 	Usage:  "Complete task",
 	Action: todotxtDo,
-	Flags:  doFlags,
+	Flags:  defaultFlags,
 }
 
 var commandUndo = &cli.Command{
 	Name:   "undo",
 	Usage:  "Uncomplete task",
 	Action: todotxtUndo,
-	Flags:  undoFlags,
+	Flags:  defaultFlags,
 }
