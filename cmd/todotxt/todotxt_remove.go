@@ -42,8 +42,12 @@ func todotxtRemove(c *cli.Context) error {
 	defer f.Close()
 
 	w := todotxt.NewWriter(f)
-	w.WriteAll(tasks)
+	err = w.WriteAll(tasks)
+	if err != nil {
+		return xerrors.Errorf("Failed to write tasks: %w", err)
+	}
 
+	fmt.Printf("Succeed to remove task(%d)\n", index)
 	return nil
 }
 

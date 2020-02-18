@@ -3,8 +3,9 @@ package main
 import "github.com/urfave/cli/v2"
 
 var commands = []*cli.Command{
-	commandList,
 	commandAdd,
+	commandRemove,
+	commandList,
 }
 
 var commandAdd = &cli.Command{
@@ -12,6 +13,13 @@ var commandAdd = &cli.Command{
 	Usage:  "Add task to todo.txt",
 	Action: todotxtAdd,
 	Flags:  addFlags,
+}
+
+var commandRemove = &cli.Command{
+	Name:   "rm",
+	Usage:  "Remove task from todo.txt",
+	Action: todotxtRemove,
+	Flags:  removeFlags,
 }
 
 var commandList = &cli.Command{
