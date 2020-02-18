@@ -2,11 +2,7 @@ package todotxt
 
 import (
 	"bufio"
-	"fmt"
 	"io"
-	"reflect"
-	"strings"
-	"time"
 )
 
 // A Writer writes tasks using todo.txt encoding.
@@ -24,28 +20,7 @@ func NewWriter(w io.Writer) *Writer {
 // Write writes single task to w.
 // This method doesn't validate Task.
 func (w *Writer) Write(t *Task) error {
-	line := []string{}
-	if t.Completed {
-		line = append(line, "x")
-	}
-
-	if t.priority != 0 {
-		line = append(line, fmt.Sprintf("(%s)", string(t.priority)))
-	}
-
-	if t.Completed && !reflect.DeepEqual(t.CompletionDate, time.Time{}) {
-		line = append(line, t.CompletionDate.Format("2006-01-02"))
-	}
-
-	if !reflect.DeepEqual(t.CreationDate, time.Time{}) {
-		line = append(line, t.CreationDate.Format("2006-01-02"))
-	}
-
-	if t.Description() != "" {
-		line = append(line, t.Description())
-	}
-
-	_, err := w.w.WriteString(strings.Join(line, " ") + "\n")
+	_, err := w.w.WriteString(t.Format() + "\n")
 	return err
 }
 
