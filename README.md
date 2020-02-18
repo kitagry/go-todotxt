@@ -20,6 +20,17 @@ w := todotxt.NewWriter(f)
 w.WriteAll(tasks)
 ```
 
+## Tools
+
+### Install
+
+```
+$ cd cmd/todotxt
+$ go install
+```
+
+![go-todotxt](https://user-images.githubusercontent.com/21323222/74706397-3cdef380-525a-11ea-9877-458ae3b6cebd.gif)
+
 ## License
 
 MIT
@@ -27,3 +38,4 @@ MIT
 ## Author
 
 Ryo Kitagawa
+
