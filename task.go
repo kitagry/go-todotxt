@@ -77,6 +77,22 @@ func (t *Task) Format() string {
 	return strings.Join(line, " ")
 }
 
+// Complete sets Completed true, and set CompletionDate time.Now.
+func (t *Task) Complete() {
+	if !t.Completed {
+		t.Completed = true
+		t.CompletionDate = time.Now()
+	}
+}
+
+// Reopen sets Completed false, and set CompletionDate time.Time{}
+func (t *Task) Reopen() {
+	if t.Completed {
+		t.Completed = false
+		t.CompletionDate = time.Time{}
+	}
+}
+
 // SetPriority sets priority to task.
 // this may returns error, when priority is not [A-Z].
 func (t *Task) SetPriority(p byte) error {

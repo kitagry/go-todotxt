@@ -11,11 +11,11 @@ import (
 	"golang.org/x/xerrors"
 )
 
-var priorityFlags = []cli.Flag{
+var undoFlags = []cli.Flag{
 	&cli.StringFlag{Name: "file", Value: "todo.txt", Aliases: []string{"f"}, Usage: "Path to todo.txt file"},
 }
 
-func todotxtPriority(c *cli.Context) error {
+func todotxtUndo(c *cli.Context) error {
 	todotxtFile := c.String("file")
 	f, err := os.Open(todotxtFile)
 	if err != nil {
@@ -33,16 +33,11 @@ func todotxtPriority(c *cli.Context) error {
 	if err != nil {
 		return fmt.Errorf("args[0] should be int, got %s", c.Args().First())
 	}
-	index--
 
-	pris := []byte(c.Args().Get(1))
-	if len(pris) != 1 {
-		return fmt.Errorf("args[1] should be A-Z, got %s", c.Args().Get(1))
+	if index < 1 || index > len(tasks) {
+		return fmt.Errorf("args[0] should be 1-%d", len(tasks))
 	}
-	err = tasks[index].SetPriority(pris[0])
-	if err != nil {
-		return xerrors.Errorf("Priority update error: %w", err)
-	}
+	tasks[index-1].Reopen()
 
 	f, err = os.Create(todotxtFile)
 	if err != nil {
@@ -56,6 +51,6 @@ func todotxtPriority(c *cli.Context) error {
 		return xerrors.Errorf("Failed to write tasks: %w", err)
 	}
 
-	fmt.Printf("Succeed to change priority to %s\n", string(tasks[index].Priority()))
+	fmt.Printf("Succeed to done task(%d)\n", index)
 	return nil
 }
